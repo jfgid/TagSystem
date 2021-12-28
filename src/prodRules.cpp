@@ -20,3 +20,20 @@ std::string prod_rule1(char c) {
             break;
     }
 }
+
+std::string prod_rule2(char c) {
+    switch (c) {
+        case 'a':
+            return "bc";
+            break;
+        case 'b':
+            return "a";
+            break;
+        case 'c':
+            return "aaa";
+            break;
+        default: // Not in the alphabet
+            throw NotInAlphabetException(c);
+            break;
+    }
+}

@@ -36,5 +36,18 @@ int main() {
         cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
     }
 
+    word = "aaa";
+    idx = 0;
+    cout << "> " << idx++ << ": " << word << endl;
+    try {
+        while (word.length() > 1) {
+            tagOpe(deletion_number, prod_rule2, word);
+            cout << "> " << idx++ << ": " << word << endl;
+        }
+    }
+    catch (const NotInAlphabetException& notInAlphaEx) {
+        cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
+    }
+
     return 0;
 }
