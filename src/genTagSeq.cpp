@@ -6,11 +6,12 @@
 
 using namespace std;
 
-void tagOpe(int delNb, string & word) {
-    if (word.length() > delNb) {
+template <typename ProdRuleFunction>
+void tagOpe(int delNb, ProdRuleFunction prod_rule, string & word) {
+    if (word.length() >= delNb) {
         const char first = word[0];
         word.erase(0, delNb);
-        word = word + prodRule1(first);
+        word = word + prod_rule(first);
     }
     else {
         word = "";
@@ -19,12 +20,12 @@ void tagOpe(int delNb, string & word) {
 
 int main() {
     const int deletion_number = 2;
-    string word = "baaaaaa";
+    string word = "baa";
     int idx = 0;
     cout << "> " << idx++ << ": " << word << endl;
     try {
         while (word.length() > 0) {
-            tagOpe(deletion_number, word);
+            tagOpe(deletion_number, prod_rule1, word);
             cout << "> " << idx++ << ": " << word << endl;
         }
     }
@@ -34,5 +35,6 @@ int main() {
     catch (const NotInAlphabetException& notInAlphaEx) {
         cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
     }
+
     return 0;
 }

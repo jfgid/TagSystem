@@ -1,7 +1,7 @@
 #include "prodRules.hpp"
 #include "prodExcep.hpp"
 
-std::string prodRule1(char c) {
+std::string prod_rule1(char c) {
     switch(c) {
         case 'a':
             return "ccbaH";
