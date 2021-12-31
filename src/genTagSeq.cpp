@@ -6,48 +6,46 @@
 
 using namespace std;
 
-template <typename ProdRuleFunction>
-void tagOpe(int delNb, ProdRuleFunction prod_rule, string & word) {
+typedef string(*ProdRuleFunc)(char);
+
+template <ProdRuleFunc ProdRule>
+void tagOpe(int delNb, string & word) {
     if (word.length() >= delNb) {
         const char first = word[0];
         word.erase(0, delNb);
-        word = word + prod_rule(first);
+        word = word + ProdRule(first);
     }
     else {
         word = "";
     }
 }
 
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+void genTagSequences(const string & word, int idx) {
+    if (word.length() < MinLen) {
+        return;
+    }
+    string next_word = word;
+    tagOpe<ProdRule>(DelNum, next_word);
+    cout << "> " << ++idx << ": " << next_word << endl;
+    genTagSequences<ProdRule, DelNum, MinLen>(next_word, idx);
+}
+
 int main() {
-    const int deletion_number = 2;
-    string word = "baa";
-    int idx = 0;
-    cout << "> " << idx++ << ": " << word << endl;
     try {
-        while (word.length() > 0) {
-            tagOpe(deletion_number, prod_rule1, word);
-            cout << "> " << idx++ << ": " << word << endl;
-        }
+        cout << "> 0: baa" << endl;
+        genTagSequences<prod_rule1, 2, 1>("baa", 0);
     }
-    catch (const HaltingSymbolException& haltEx) {
-        cout << "Halting symbol exception : " << haltEx.buildMsg() << endl;
-    }
-    catch (const NotInAlphabetException& notInAlphaEx) {
-        cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
+    catch (const exception & ex) {
+        cout << "Exception : " << ex.what() << endl;
     }
 
-    word = "aaa";
-    idx = 0;
-    cout << "> " << idx++ << ": " << word << endl;
     try {
-        while (word.length() > 1) {
-            tagOpe(deletion_number, prod_rule2, word);
-            cout << "> " << idx++ << ": " << word << endl;
-        }
+        cout << "> 0: aaa" << endl;
+        genTagSequences<prod_rule2, 2, 2>("aaa", 0);
     }
-    catch (const NotInAlphabetException& notInAlphaEx) {
-        cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
+    catch (const exception & ex) {
+        cout << "Exception : " << ex.what() << endl;
     }
-
     return 0;
 }

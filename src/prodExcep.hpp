@@ -14,7 +14,7 @@ public:
     }
 
     const char * what() const noexcept override {
-        return buildMsg().c_str();
+        return "Not In Alphabet Exception";
     }
 
 private:
@@ -33,8 +33,8 @@ public:
     }
 
     const char * what() const noexcept override {
-        return buildMsg().c_str();
-    }
+        return "Halting Symbol Exception";
+     }
 
 private:
     char m_halt_symbol;
