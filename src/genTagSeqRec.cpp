@@ -1,24 +1,11 @@
 #include <iostream>
 #include <string>
 
+#include "genTag.hpp"
 #include "prodRules.hpp"
 #include "prodExcep.hpp"
 
 using namespace std;
-
-typedef string(*ProdRuleFunc)(char);
-
-template <ProdRuleFunc ProdRule>
-void tagOpe(int delNb, string & word) {
-    if (word.length() >= delNb) {
-        const char first = word[0];
-        word.erase(0, delNb);
-        word = word + ProdRule(first);
-    }
-    else {
-        word = "";
-    }
-}
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 void genTagSequences(const string & word, int idx) {
@@ -26,7 +13,7 @@ void genTagSequences(const string & word, int idx) {
         return;
     }
     string next_word = word;
-    tagOpe<ProdRule>(DelNum, next_word);
+    genTag<ProdRule>(DelNum, next_word);
     cout << "> " << ++idx << ": " << next_word << endl;
     genTagSequences<ProdRule, DelNum, MinLen>(next_word, idx);
 }

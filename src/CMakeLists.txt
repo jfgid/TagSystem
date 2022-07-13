@@ -1,7 +1,13 @@
-add_executable(genTagSeq
+add_executable(genTagSequence
     prodRules.cpp
-    genTagSeq.cpp)
+    genTagSequence.cpp)
 
-    add_executable(genTagSeqLoop
+# Recursive implementation
+add_executable(genTagSeqRec
+    prodRules.cpp
+    genTagSeqRec.cpp)
+
+# Handwritten loop implementation
+add_executable(genTagSeqLoop
     prodRules.cpp
     genTagSeqLoop.cpp)

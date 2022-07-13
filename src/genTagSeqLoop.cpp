@@ -1,31 +1,21 @@
 #include <iostream>
 #include <string>
 
+#include "genTag.hpp"
 #include "prodRules.hpp"
 #include "prodExcep.hpp"
 
 using namespace std;
 
-template <typename ProdRuleFunction>
-void tagOpe(int delNb, ProdRuleFunction prod_rule, string & word) {
-    if (word.length() >= delNb) {
-        const char first = word[0];
-        word.erase(0, delNb);
-        word = word + prod_rule(first);
-    }
-    else {
-        word = "";
-    }
-}
-
-int main() {
-    const int deletion_number = 2;
-    string word = "baa";
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+void genTagSeqLoop(const string & firstWord)
+{
+    string word = firstWord;
     int idx = 0;
     cout << "> " << idx++ << ": " << word << endl;
     try {
         while (word.length() > 0) {
-            tagOpe(deletion_number, prod_rule1, word);
+            genTag<ProdRule>(DelNum, word);
             cout << "> " << idx++ << ": " << word << endl;
         }
     }
@@ -35,36 +25,18 @@ int main() {
     catch (const NotInAlphabetException& notInAlphaEx) {
         cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
     }
+}
 
-    word = "aaa";
-    idx = 0;
-    cout << "> " << idx++ << ": " << word << endl;
+int main() {
     try {
-        while (word.length() > 1) {
-            tagOpe(deletion_number, prod_rule2, word);
-            cout << "> " << idx++ << ": " << word << endl;
-        }
-    }
-    catch (const NotInAlphabetException& notInAlphaEx) {
-        cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
-    }
+        genTagSeqLoop<prod_rule1, 2, 1>("baa");
 
-    word = "baabaabaabaabaabaabaa";
-    idx = 0;
-    cout << "> " << idx++ << ": " << word << "(len = " << word.length() << ")" << endl;
-    try {
-        while (word.length() > 1) {
-            tagOpe(deletion_number, prod_rule3, word);
-            idx++;
-            if ((idx % 1000) == 0) {
-                cout << "> " << idx++ << ": len = " << word.length() << endl;
-            }
-        }
-        cout << "End word> " << idx++ << ": " << word << endl;
-    }
-    catch (const NotInAlphabetException& notInAlphaEx) {
-        cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
-    }
+        genTagSeqLoop<prod_rule2, 2, 2>("aaa");
 
+        genTagSeqLoop<prod_rule3, 3, 1>("baabaabaabaabaabaabaa");
+    }
+    catch (const exception & ex) {
+        cout << "Exception : " << ex.what() << endl;
+    }
     return 0;
 }
