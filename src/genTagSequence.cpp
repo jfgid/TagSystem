@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <numeric>
 
 #include "genTag.hpp"
 #include "prodRules.hpp"
@@ -8,31 +10,50 @@
 using namespace std;
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-void genTagSequences(const string & word, int idx) {
-    if (word.length() < MinLen) {
-        return;
+string genNextTag(const string & curTag, const string & str)
+{
+    if (curTag.length() < MinLen) {
+        cout << ">" << endl;
+        return "";
     }
-    string next_word = word;
-    genTag<ProdRule>(DelNum, next_word);
-    cout << "> " << ++idx << ": " << next_word << endl;
-    genTagSequences<ProdRule, DelNum, MinLen>(next_word, idx);
+    string nextTag = curTag;
+    genTag<ProdRule>(DelNum, nextTag);
+    cout << "> " << nextTag << endl;
+    return nextTag;
 }
 
 int main() {
+    vector<string> tagSeq{ 10 };
+
     string firstWord{ "baa" };
     try {
-        cout << "> 0: " << firstWord << endl;
-        genTagSequences<prod_rule1, 2, 1>(firstWord, 0);
+        cout << "first: " << firstWord << endl;
+
+        auto res = accumulate(
+            tagSeq.cbegin(),
+            tagSeq.cend(),
+            firstWord,
+            genNextTag<prod_rule1, 2, 1>);
+
+        cout << "last: " << res << endl;
     }
-    catch (const exception & ex) {
+    catch (const exception& ex) {
         cout << "Exception : " << ex.what() << endl;
     }
 
     cout << endl;
     try {
+        tagSeq = vector<string>{ 30 };
         firstWord = "aaa";
-        cout << "> 0: " << firstWord << endl;
-        genTagSequences<prod_rule2, 2, 2>(firstWord, 0);
+        cout << "first: " << firstWord << endl;
+
+        auto res = accumulate(
+            tagSeq.cbegin(),
+            tagSeq.cend(),
+            firstWord,
+            genNextTag<prod_rule2, 2, 2>);
+
+        cout << "last: " << res << endl;
     }
     catch (const exception & ex) {
         cout << "Exception : " << ex.what() << endl;
@@ -40,9 +61,17 @@ int main() {
 
     cout << endl;
     try {
+        tagSeq = vector<string>{ 100 };
         firstWord = "baabaabaabaabaabaabaa";
-        cout << "> 0: " << firstWord << endl;
-        genTagSequences<prod_rule3, 3, 1>(firstWord, 0);
+        cout << "first: " << firstWord << endl;
+
+        auto res = accumulate(
+            tagSeq.cbegin(),
+            tagSeq.cend(),
+            firstWord,
+            genNextTag<prod_rule3, 3, 1>);
+
+        cout << "last: " << res << endl;
     }
     catch (const exception & ex) {
         cout << "Exception : " << ex.what() << endl;

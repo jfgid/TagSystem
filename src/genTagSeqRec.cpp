@@ -8,7 +8,8 @@
 using namespace std;
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-void genTagSequences(const string & word, int idx) {
+void genTagSequences(const string & word, int idx)
+{
     if (word.length() < MinLen) {
         return;
     }
