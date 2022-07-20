@@ -1,80 +1,92 @@
 #include <iostream>
 #include <string>
-#include <vector>
-#include <numeric>
+#include <ranges>
 
 #include "genTag.hpp"
 #include "prodRules.hpp"
 #include "prodExcep.hpp"
 
-using namespace std;
-
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-string genNextTag(const string & curTag, const string & str)
+std::string genNextTag(const std::string& tag)
 {
-    if (curTag.length() < MinLen) {
-        cout << ">" << endl;
+    if (tag.length() < MinLen) {
         return "";
     }
-    string nextTag = curTag;
+    std::string nextTag = tag;
     genTag<ProdRule>(DelNum, nextTag);
-    cout << "> " << nextTag << endl;
     return nextTag;
 }
 
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+struct TagSeqIter {
+    using value_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::forward_iterator_tag;
+
+    // TagSeqIter(const std::string& iniTag) :
+    //     m_curTag{ iniTag }
+    // {}
+
+    const std::string& operator*() const { return m_curTag; }
+
+    // Define prefix increment operator.
+    TagSeqIter& operator++() {
+        m_curTag = genNextTag<ProdRule, DelNum, MinLen>(m_curTag);
+        return *this;
+    }
+
+    // Define postfix increment operator.
+    TagSeqIter operator++(int) {
+        auto temp = *this;
+        ++*this;
+        return temp;
+    }
+
+    bool operator==(const TagSeqIter&) const = default;
+
+private:
+    std::string m_curTag = "baa";
+};
+
+namespace rng = std::ranges;
+
+namespace views {
+    template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+    auto tagSeq =
+        rng::subrange<TagSeqIter<ProdRule, DelNum, MinLen>, std::unreachable_sentinel_t>{};
+}
+
 int main() {
-    vector<string> tagSeq{ 10 };
-
-    string firstWord{ "baa" };
+    std::string firstWord{ "baa" };
     try {
-        cout << "first: " << firstWord << endl;
+        auto viewTagSeq = views::tagSeq<prod_rule1, 2, 1>
+            | std::views::take(10);
 
-        auto res = accumulate(
-            tagSeq.cbegin(),
-            tagSeq.cend(),
-            firstWord,
-            genNextTag<prod_rule1, 2, 1>);
-
-        cout << "last: " << res << endl;
+        int idx = 0;
+        for (const auto tag : viewTagSeq) {
+            std::cout << "> " << idx++ << ": " << tag << std::endl;
+        }
     }
-    catch (const exception& ex) {
-        cout << "Exception : " << ex.what() << endl;
+    catch (const std::exception& ex) {
+        std::cout << "Exception : " << ex.what() << std::endl;
     }
 
-    cout << endl;
+    std::cout << std::endl;
     try {
-        tagSeq = vector<string>{ 30 };
+        //tagSeq = vector<string>{ 30 };
         firstWord = "aaa";
-        cout << "first: " << firstWord << endl;
-
-        auto res = accumulate(
-            tagSeq.cbegin(),
-            tagSeq.cend(),
-            firstWord,
-            genNextTag<prod_rule2, 2, 2>);
-
-        cout << "last: " << res << endl;
     }
-    catch (const exception & ex) {
-        cout << "Exception : " << ex.what() << endl;
+    catch (const std::exception & ex) {
+        std::cout << "Exception : " << ex.what() << std::endl;
     }
 
-    cout << endl;
+    std::cout << std::endl;
     try {
-        tagSeq = vector<string>{ 100 };
+        //tagSeq = vector<string>{ 100 };
         firstWord = "baabaabaabaabaabaabaa";
-        cout << "first: " << firstWord << endl;
-
-        auto res = accumulate(
-            tagSeq.cbegin(),
-            tagSeq.cend(),
-            firstWord,
-            genNextTag<prod_rule3, 3, 1>);
-
-        cout << "last: " << res << endl;
     }
-    catch (const exception & ex) {
-        cout << "Exception : " << ex.what() << endl;
+    catch (const std::exception & ex) {
+        std::cout << "Exception : " << ex.what() << std::endl;
     }
 
     return 0;
