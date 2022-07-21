@@ -10,7 +10,7 @@ add_executable(genTagSeqAccu
     prodRules.cpp
     genTagSeqAccu.cpp)
 
-    # Recursive implementation
+# Recursive implementation
 add_executable(genTagSeqRec
     prodRules.cpp
     genTagSeqRec.cpp)

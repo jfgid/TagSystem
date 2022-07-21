@@ -10,22 +10,29 @@ template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 std::string genNextTag(const std::string& tag)
 {
     if (tag.length() < MinLen) {
+        std::cout << std::endl;
         return "";
     }
     std::string nextTag = tag;
     genTag<ProdRule>(DelNum, nextTag);
+    std::cout << nextTag << std::endl;
     return nextTag;
 }
 
-template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+template<size_t N>
+struct StringLiteral {
+    constexpr StringLiteral(const char (&str)[N]) {
+        std::copy_n(str, N, value);
+    }
+
+    char value[N];
+};
+
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
 struct TagSeqIter {
-    using value_type = std::size_t;
+    using value_type = std::string;
     using difference_type = std::ptrdiff_t;
     using iterator_category = std::forward_iterator_tag;
-
-    // TagSeqIter(const std::string& iniTag) :
-    //     m_curTag{ iniTag }
-    // {}
 
     const std::string& operator*() const { return m_curTag; }
 
@@ -45,27 +52,32 @@ struct TagSeqIter {
     bool operator==(const TagSeqIter&) const = default;
 
 private:
-    std::string m_curTag = "baa";
+    std::string m_curTag = std::string(IniTag.value);
 };
 
-namespace rng = std::ranges;
-
 namespace views {
-    template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-    auto tagSeq =
-        rng::subrange<TagSeqIter<ProdRule, DelNum, MinLen>, std::unreachable_sentinel_t>{};
+    template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
+    auto tagSeq = 
+        std::ranges::subrange<TagSeqIter<ProdRule, DelNum, MinLen, IniTag>, std::unreachable_sentinel_t>{};
+}
+
+void displayView(const auto& view, const std::string& firstTag) {
+    int idx = 0;
+    std::cout << "> " << idx++ << ": " << firstTag << std::endl;
+    for (const auto& tag : view) {
+        if (tag.length() == 0) {
+            break;
+        }
+        std::cout << "> " << idx++ << ": ";
+    }
 }
 
 int main() {
-    std::string firstWord{ "baa" };
     try {
-        auto viewTagSeq = views::tagSeq<prod_rule1, 2, 1>
-            | std::views::take(10);
+        constexpr StringLiteral firstTag{ "baa" };
+        auto viewTagSeq1 = views::tagSeq<prod_rule1, 2, 1, firstTag>;
 
-        int idx = 0;
-        for (const auto tag : viewTagSeq) {
-            std::cout << "> " << idx++ << ": " << tag << std::endl;
-        }
+        displayView(viewTagSeq1, std::string(firstTag.value));
     }
     catch (const std::exception& ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
@@ -73,8 +85,10 @@ int main() {
 
     std::cout << std::endl;
     try {
-        //tagSeq = vector<string>{ 30 };
-        firstWord = "aaa";
+        constexpr StringLiteral firstTag{ "aaa" };
+        auto viewTagSeq2 = views::tagSeq<prod_rule2, 2, 2, firstTag>;
+
+        displayView(viewTagSeq2, std::string(firstTag.value));
     }
     catch (const std::exception & ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
@@ -82,8 +96,10 @@ int main() {
 
     std::cout << std::endl;
     try {
-        //tagSeq = vector<string>{ 100 };
-        firstWord = "baabaabaabaabaabaabaa";
+        constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
+        auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
+
+        displayView(viewTagSeq3, std::string(firstTag.value));
     }
     catch (const std::exception & ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
