@@ -1,6 +1,6 @@
 # Tag System Project
 
-These C++ programs showcase different programming styles with an emphasis on functional style. This style exercise is inspired by the reading of the book entitled "Functional Programming in C++"[^1]. These programs compute the same sequences of words defined by tag systems.  
+These C++ programs showcase different programming styles with an emphasis on functional style. This style exercise is inspired by the reading of the book entitled "Functional Programming in C++"[^1]. They compute the same sequences of words defined by tag systems.  
 
 Tag systems are described in Wikipedia :
 
@@ -9,7 +9,7 @@ Tag systems are described in Wikipedia :
 
 The generation of the next tag from the current one is done by the *genTag* function :
 ```
-typedef std::string(*ProdRuleFunc)(char);
+typedef auto (*ProdRuleFunc)(char) -> std::string;
 
 template <ProdRuleFunc ProdRule>
 void genTag(int delNb, std::string & word) {
@@ -37,4 +37,4 @@ File "genTagSeqAccu.cpp"
 ### By using an infinite range
 File "genTagSequence.cpp"
 
-[^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications CO, 2019. 
+[^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019. 
