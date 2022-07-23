@@ -8,7 +8,7 @@ Tag systems are described in Wikipedia :
 * [Système de tague](https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_tague)
 
 The generation of the next tag from the current one is done by the *genTag* function :
-...
+```
 typedef std::string(*ProdRuleFunc)(char);
 
 template <ProdRuleFunc ProdRule>
@@ -22,6 +22,6 @@ void genTag(int delNb, std::string & word) {
         word = "";
     }
 }
-...
+```
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications CO, 2019. 
