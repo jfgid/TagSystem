@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-typedef std::string(*ProdRuleFunc)(char);
+typedef auto (*ProdRuleFunc)(char) -> std::string;
 
 template <ProdRuleFunc ProdRule>
 void genTag(int delNb, std::string & word) {
