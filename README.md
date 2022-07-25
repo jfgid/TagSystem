@@ -1,4 +1,4 @@
-# Tag System Project
+# Several implementations of Tag Systems in C++
 
 These C++ programs illustrate different programming styles with an emphasis on functional style. This stylistic exercise is inspired by the reading of the book entitled *Functional Programming in C++*[^1]. They compute the same sequences of words defined by tag systems.  
 
@@ -7,6 +7,25 @@ Tag systems are described in Wikipedia :
 * [Tag system](https://en.wikipedia.org/wiki/Tag_system)
 * [Système de tague](https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_tague)
 
+## How to build the binaries
+This project has been done on Ubuntu 22.04 with the C++ compiler GCC v11.2 compatible the version C++20. It uses the CMake utility (v3.22.1). To build the binaries from the source code after cloning the Git repository, you can create a empty sub-directory "build" and run these commands :
+```
+$ cd build
+$ cmake ..
+-- The C compiler identification is GNU 11.2.0
+-- The CXX compiler identification is GNU 11.2.0
+...
+-- Configuring done
+-- Generating done
+-- Build files have been written to: .../TagSystem/build
+$ make
+[  8%] Building CXX object src/CMakeFiles/genTagSequence.dir/prodRules.cpp.o
+[ 16%] Building CXX object src/CMakeFiles/genTagSequence.dir/genTagSequence.cpp.o
+[ 25%] Linking CXX executable genTagSequence
+...
+```
+The executables are stored into the sub-directory : build/src/
+## Word (tag) generation
 The generation of the next tag from the current one is done by the *genTag* function :
 ```
 typedef auto (*ProdRuleFunc)(char) -> std::string;
