@@ -61,7 +61,8 @@ namespace views {
         std::ranges::subrange<TagSeqIter<ProdRule, DelNum, MinLen, IniTag>, std::unreachable_sentinel_t>{};
 }
 
-void displayView(const auto& view, const std::string& firstTag) {
+void displayView(const auto& view, const std::string& firstTag)
+{
     int idx = 0;
     std::cout << "> " << idx++ << ": " << firstTag << std::endl;
     for (const auto& tag : view) {
