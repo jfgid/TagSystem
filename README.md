@@ -49,8 +49,21 @@ void genTagSeqLoop(const string & firstWord)
 ```
 The consecutive words are not stored in memory but written onto standard output stream.
 ## Recursive implementation
-File "genTagSeqRec.cpp"
-
+The tag sequences generation is implemented in the file "genTagSeqRec.cpp" by using recursion :
+```
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+void genTagSequences(const string & word, int idx)
+{
+    if (word.length() < MinLen) {
+        return;
+    }
+    string next_word = word;
+    genTag<ProdRule>(DelNum, next_word);
+    cout << "> " << ++idx << ": " << next_word << endl;
+    genTagSequences<ProdRule, DelNum, MinLen>(next_word, idx);
+}
+```
+There is a drawback with this implementation because, although this code seems tail-recursive, the used compiler (g++-11 v11.2.0) doesn't employ tail-call optimization (even with the -O2 option) and the computation of the last tag sequences (the 3-tag system defined by E. Post with the initial word "baabaabaabaabaabaabaa") fails with a segmentation fault.
 ## Functional implementation
 
 ### By using the Accumulate algorithm
