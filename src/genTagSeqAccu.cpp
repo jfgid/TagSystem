@@ -22,7 +22,8 @@ string genNextTag(const string& curTag, const string&)
     return nextTag;
 }
 
-int main() {
+int main()
+{
     vector<string> tagSeq{ 10 };
 
     string firstWord{ "baa" };
@@ -55,7 +56,7 @@ int main() {
 
         cout << "last: " << res << endl;
     }
-    catch (const exception & ex) {
+    catch (const exception& ex) {
         cout << "Exception : " << ex.what() << endl;
     }
 
@@ -73,7 +74,7 @@ int main() {
 
         cout << "last: " << res << endl;
     }
-    catch (const exception & ex) {
+    catch (const exception& ex) {
         cout << "Exception : " << ex.what() << endl;
     }
 

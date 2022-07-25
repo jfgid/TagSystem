@@ -8,7 +8,7 @@
 using namespace std;
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-void genTagSeqLoop(const string & firstWord)
+void genTagSeqLoop(const string& firstWord)
 {
     string word = firstWord;
     int idx = 0;
@@ -27,7 +27,8 @@ void genTagSeqLoop(const string & firstWord)
     }
 }
 
-int main() {
+int main()
+{
     try {
         genTagSeqLoop<prod_rule1, 2, 1>("baa");
 
@@ -35,7 +36,7 @@ int main() {
 
         genTagSeqLoop<prod_rule3, 3, 1>("baabaabaabaabaabaabaa");
     }
-    catch (const exception & ex) {
+    catch (const exception& ex) {
         cout << "Exception : " << ex.what() << endl;
     }
     return 0;

@@ -21,7 +21,7 @@ std::string genNextTag(const std::string& tag)
 
 template<size_t N>
 struct StringLiteral {
-    constexpr StringLiteral(const char (&str)[N]) {
+    constexpr StringLiteral(const char(&str)[N]) {
         std::copy_n(str, N, value);
     }
 
@@ -45,7 +45,7 @@ struct TagSeqIter {
     // Define postfix increment operator.
     TagSeqIter operator++(int) {
         auto temp = *this;
-        ++*this;
+        ++* this;
         return temp;
     }
 
@@ -57,7 +57,7 @@ private:
 
 namespace views {
     template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
-    auto tagSeq = 
+    auto tagSeq =
         std::ranges::subrange<TagSeqIter<ProdRule, DelNum, MinLen, IniTag>, std::unreachable_sentinel_t>{};
 }
 
@@ -72,7 +72,8 @@ void displayView(const auto& view, const std::string& firstTag) {
     }
 }
 
-int main() {
+int main()
+{
     try {
         constexpr StringLiteral firstTag{ "baa" };
         auto viewTagSeq1 = views::tagSeq<prod_rule1, 2, 1, firstTag>;
@@ -90,7 +91,7 @@ int main() {
 
         displayView(viewTagSeq2, std::string(firstTag.value));
     }
-    catch (const std::exception & ex) {
+    catch (const std::exception& ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
     }
 
@@ -101,7 +102,7 @@ int main() {
 
         displayView(viewTagSeq3, std::string(firstTag.value));
     }
-    catch (const std::exception & ex) {
+    catch (const std::exception& ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
     }
 
