@@ -1,6 +1,6 @@
 # Tag System Project
 
-These C++ programs showcase different programming styles with an emphasis on functional style. This style exercise is inspired by the reading of the book entitled "Functional Programming in C++"[^1]. They compute the same sequences of words defined by tag systems.  
+These C++ programs illustrate different programming styles with an emphasis on functional style. This stylistic exercise is inspired by the reading of the book entitled *Functional Programming in C++*[^1]. They compute the same sequences of words defined by tag systems.  
 
 Tag systems are described in Wikipedia :
 
@@ -23,9 +23,31 @@ void genTag(int delNb, std::string & word) {
     }
 }
 ```
+The template argument "ProdRule" is a function implementing the set of production rules.
 ## Handwritten loop implementation
-File "genTagSeqLoop.cpp"
-
+The file "genTagSeqLoop.cpp" implements the tag sequences generation by a straightforward handwritten loop :
+```
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+void genTagSeqLoop(const string & firstWord)
+{
+    string word = firstWord;
+    int idx = 0;
+    cout << "> " << idx++ << ": " << word << endl;
+    try {
+        while (word.length() > 0) {
+            genTag<ProdRule>(DelNum, word);
+            cout << "> " << idx++ << ": " << word << endl;
+        }
+    }
+    catch (const HaltingSymbolException& haltEx) {
+        cout << "Halting symbol exception : " << haltEx.buildMsg() << endl;
+    }
+    catch (const NotInAlphabetException& notInAlphaEx) {
+        cout << "Not in alphabet exception : " << notInAlphaEx.buildMsg() << endl;
+    }
+}
+```
+The consecutive words are not stored in memory but written onto standard output stream.
 ## Recursive implementation
 File "genTagSeqRec.cpp"
 
