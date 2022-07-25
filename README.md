@@ -66,8 +66,36 @@ void genTagSequences(const string & word, int idx)
 There is a drawback with this implementation because, although this code seems tail-recursive, the used compiler (g++-11 v11.2.0) doesn't employ tail-call optimization (even with the -O2 option) and the computation of the last tag sequences (the 3-tag system defined by E. Post with the initial word "baabaabaabaabaabaabaa") fails with a segmentation fault.
 ## Functional implementation
 
-### By using the Accumulate algorithm
-File "genTagSeqAccu.cpp"
+### By using folds with the algorithm std::accumulate
+Still as a stylistic exercise, the the tag sequences generation is implemented in the file "genTagSeqAccu.cpp" with folding and the algorithm std::accumulate :
+```
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+string genNextTag(const string& curTag, const string&)
+{
+    if (curTag.length() < MinLen) {
+        cout << ">" << endl;
+        return "";
+    }
+    string nextTag = curTag;
+    genTag<ProdRule>(DelNum, nextTag);
+    cout << "> " << nextTag << endl;
+    return nextTag;
+}
+...
+        tagSeq = vector<string>{ 100 };
+        firstWord = "baabaabaabaabaabaabaa";
+        cout << "first: " << firstWord << endl;
+
+        auto res = accumulate(
+            tagSeq.cbegin(),
+            tagSeq.cend(),
+            firstWord,
+            genNextTag<prod_rule3, 3, 1>);
+
+        cout << "last: " << res << endl;
+...
+```
+The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm.
 
 ### By using an infinite range
 File "genTagSequence.cpp"
