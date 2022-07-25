@@ -8,7 +8,7 @@ Tag systems are described in Wikipedia :
 * [Système de tague](https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_tague)
 
 ## How to build the project
-This project has been done on Ubuntu 22.04 with the C++ compiler GCC v11.2 compatible the version C++20. It uses the CMake utility (v3.22.1). To build the binaries from the source code after cloning the Git repository, you can create a empty sub-directory "build" and run these commands :
+This project has been done on Ubuntu 22.04 with the C++ compiler GCC v11.2 compatible with the C++20 version of the C++ language. It uses the CMake utility (v3.22.1). To build the binaries from the source code after cloning the Git repository, you can create a empty sub-directory "build" and run these commands :
 ```
 $ cd build
 $ cmake ..
@@ -121,7 +121,7 @@ string genNextTag(const string& curTag, const string&)
 The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that this vector could be scanned after the computation to process the generated words.
 
 ### By using an infinite range
-File "genTagSequence.cpp"
+File "genTagSequence.cpp"  
 To implement an infinite range : [^2]
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
