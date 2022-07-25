@@ -67,7 +67,7 @@ There is a drawback with this implementation because, although this code seems t
 ## Functional implementation
 
 ### By using folds with the algorithm std::accumulate
-Still as a stylistic exercise, the the tag sequences generation is implemented in the file "genTagSeqAccu.cpp" with folding and the algorithm std::accumulate :
+Still as a stylistic exercise, the tag sequences generation is implemented in the file "genTagSeqAccu.cpp" with folding and the algorithm std::accumulate :
 ```
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 string genNextTag(const string& curTag, const string&)
@@ -95,7 +95,7 @@ string genNextTag(const string& curTag, const string&)
         cout << "last: " << res << endl;
 ...
 ```
-The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm.
+The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that this vector could be scanned after the computation to process the generated words.
 
 ### By using an infinite range
 File "genTagSequence.cpp"
