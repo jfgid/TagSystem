@@ -10,7 +10,7 @@
 using namespace std;
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-string genNextTag(const string & curTag, const string & str)
+string genNextTag(const string& curTag, const string&)
 {
     if (curTag.length() < MinLen) {
         cout << ">" << endl;
