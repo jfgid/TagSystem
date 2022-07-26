@@ -1,6 +1,6 @@
 # Different ways to implement Tag Systems in C++
 
-These C++ programs illustrate different programming styles with an emphasis on **functional programming style**. This stylistic exercise is inspired by the reading of the book entitled *Functional Programming in C++*[^1]. They compute the same sequences of words defined by tag systems.  
+These C++ programs illustrate different programming styles with an emphasis on the **functional programming style**. This stylistic exercise is inspired by the reading of the book entitled *Functional Programming in C++*[^1]. They compute the same sequences of words defined by tag systems.  
 
 Tag systems are described in Wikipedia :
 
@@ -158,7 +158,32 @@ private:
     std::string m_curTag = std::string(IniTag.value);
 };
 ```
+The instruction *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function.  
+A template non-type (sic) parameter can not be of type *std::string* because "because it is not structural" (as said by the compiler), so the type "StringLiteral" is used to set the initial value of the tag as explained on the blog page entitled *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
+```
+template<size_t N>
+struct StringLiteral {
+    constexpr StringLiteral(const char(&str)[N]) {
+        std::copy_n(str, N, value);
+    }
 
+    char value[N];
+};
+```
+Finally these ranges can be used as simple as :
+```
+constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
+auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
+
+std::cout << "> 0: " << firstTag.value << std::endl;
+for (int idx; const auto& tag : viewTagSeq3) {
+    if (tag.length() == 0) {
+        break;
+    }
+    std::cout << "> " << idx++ << ": " << tag << std::endl;
+}
+```
+Actually the elements composing the range are generated only when iterating on it.
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
