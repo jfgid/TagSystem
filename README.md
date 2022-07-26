@@ -158,7 +158,7 @@ private:
     std::string m_curTag = std::string(IniTag.value);
 };
 ```
-The instruction *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function.  
+The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function.  
 A template non-type (sic) parameter can not be of type *std::string* because "because it is not structural" (as said by the compiler), so the type "StringLiteral" is used to set the initial value of the tag as explained on the blog page entitled *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
 ```
 template<size_t N>
