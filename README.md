@@ -1,6 +1,6 @@
-# Functional implementation of Tag Systems in C++
+# Different ways to implement Tag Systems in C++
 
-These C++ programs illustrate different programming styles with an emphasis on functional style. This stylistic exercise is inspired by the reading of the book entitled *Functional Programming in C++*[^1]. They compute the same sequences of words defined by tag systems.  
+These C++ programs illustrate different programming styles with an emphasis on **functional programming style**. This stylistic exercise is inspired by the reading of the book entitled *Functional Programming in C++*[^1]. They compute the same sequences of words defined by tag systems.  
 
 Tag systems are described in Wikipedia :
 
@@ -32,7 +32,8 @@ The generation of the next tag from the current one is done by the *genTag* func
 typedef auto (*ProdRuleFunc)(char) -> std::string;
 
 template <ProdRuleFunc ProdRule>
-void genTag(int delNb, std::string & word) {
+void genTag(int delNb, std::string& word)
+{
     if (word.length() >= delNb) {
         const char first = word[0];
         word.erase(0, delNb);
@@ -49,7 +50,7 @@ The template argument "ProdRule" is a function implementing the set of productio
 The file "genTagSeqLoop.cpp" implements the tag sequences generation by a straightforward handwritten loop :
 ```
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-void genTagSeqLoop(const string & firstWord)
+void genTagSeqLoop(const string& firstWord)
 {
     string word = firstWord;
     int idx = 0;
@@ -74,7 +75,7 @@ The consecutive words are not stored in memory but written onto standard output 
 The tag sequences generation is implemented in the file "genTagSeqRec.cpp" by using recursion :
 ```
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-void genTagSequences(const string & word, int idx)
+void genTagSequences(const string& word, int idx)
 {
     if (word.length() < MinLen) {
         return;
@@ -89,8 +90,8 @@ There is a drawback with this implementation because, although this code seems t
 
 ## Functional implementation
 
-### By using the algorithm std::accumulate
-Still as a stylistic exercise, the tag sequences generation is implemented in the file "genTagSeqAccu.cpp" with the algorithm std::accumulate :
+### By using left folds with the algorithm std::accumulate
+Still as a stylistic exercise, the tag sequences generation is implemented in the file "genTagSeqAccu.cpp" with the accumulate algorithm :
 ```
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 string genNextTag(const string& curTag, const string&)
@@ -118,11 +119,46 @@ string genNextTag(const string& curTag, const string&)
         cout << "last: " << res << endl;
 ...
 ```
-The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that this vector could be scanned after the computation to process the generated words.
+The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that it is possible after the computation to iterate through this vector to process the generated words.
 
-### By using an infinite range
-File "genTagSequence.cpp"  
-To implement an infinite range : [^2]
+### By using infinite ranges
+Tag systems are implemented in the file "genTagSequence.cpp" by using infinite (or endless) ranges as explained in the first part of this video entitled *Conquering C++20 Ranges*[^2] for computing the Fibonnaci sequence. This implementation uses the subrange class template which combines an iterator and a sentinel in a single view :
+```
+namespace views {
+    template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
+    auto tagSeq =
+        std::ranges::subrange<TagSeqIter<ProdRule, DelNum, MinLen, IniTag>, std::unreachable_sentinel_t>{};
+}
+```
+The *std::unreachable_sentinel_t* denotes the "upper bound" of an unbounded interval and thus gives the property of endlessness.  
+The specific iterator *TagSeqIter* is defined as :
+```
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
+struct TagSeqIter {
+    using difference_type = std::ptrdiff_t;
+
+    const std::string& operator*() const { return m_curTag; }
+
+    // Define prefix increment operator.
+    TagSeqIter& operator++() {
+        m_curTag = genNextTag<ProdRule, DelNum, MinLen>(m_curTag);
+        return *this;
+    }
+
+    // Define postfix increment operator.
+    TagSeqIter operator++(int) {
+        auto temp = *this;
+        ++*this;
+        return temp;
+    }
+
+    bool operator==(const TagSeqIter&) const = default;
+
+private:
+    std::string m_curTag = std::string(IniTag.value);
+};
+```
+
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
