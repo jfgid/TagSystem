@@ -10,12 +10,10 @@ template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 std::string genNextTag(const std::string& tag)
 {
     if (tag.length() < MinLen) {
-        std::cout << std::endl;
         return "";
     }
     std::string nextTag = tag;
     genTag<ProdRule>(DelNum, nextTag);
-    std::cout << nextTag << std::endl;
     return nextTag;
 }
 
@@ -30,9 +28,7 @@ struct StringLiteral {
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
 struct TagSeqIter {
-    using value_type = std::string;
     using difference_type = std::ptrdiff_t;
-    using iterator_category = std::forward_iterator_tag;
 
     const std::string& operator*() const { return m_curTag; }
 
@@ -45,7 +41,7 @@ struct TagSeqIter {
     // Define postfix increment operator.
     TagSeqIter operator++(int) {
         auto temp = *this;
-        ++* this;
+        ++*this;
         return temp;
     }
 
@@ -69,7 +65,7 @@ void displayView(const auto& view, const std::string& firstTag)
         if (tag.length() == 0) {
             break;
         }
-        std::cout << "> " << idx++ << ": ";
+        std::cout << "> " << idx++ << ": " << tag << std::endl;;
     }
 }
 
