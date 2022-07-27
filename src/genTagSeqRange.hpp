@@ -3,7 +3,6 @@
 #include <ranges>
 
 #include "genTag.hpp"
-#include "prodRules.hpp"
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 std::string genNextTag(const std::string& tag)
