@@ -3,11 +3,9 @@
 #include "genTagSeqRange.hpp"
 #include "prodRules.hpp"
 
-void displayView(const auto& view, const std::string& firstTag)
+void displayView(const auto& view)
 {
-    int idx = 0;
-    std::cout << "> " << idx++ << ": " << firstTag << std::endl;
-    for (const auto& tag : view) {
+    for (int idx = 0; const auto& tag : view) {
         if (tag.length() == 0) {
             break;
         }
@@ -21,7 +19,7 @@ int main()
         constexpr StringLiteral firstTag{ "baa" };
         auto viewTagSeq1 = views::tagSeq<prod_rule1, 2, 1, firstTag>;
 
-        displayView(viewTagSeq1, std::string(firstTag.value));
+        displayView(viewTagSeq1);
     }
     catch (const std::exception& ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
@@ -32,7 +30,7 @@ int main()
         constexpr StringLiteral firstTag{ "aaa" };
         auto viewTagSeq2 = views::tagSeq<prod_rule2, 2, 2, firstTag>;
 
-        displayView(viewTagSeq2, std::string(firstTag.value));
+        displayView(viewTagSeq2);
     }
     catch (const std::exception& ex) {
         std::cout << "Exception : " << ex.what() << std::endl;
@@ -43,7 +41,7 @@ int main()
         constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
         auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
 
-        displayView(viewTagSeq3, std::string(firstTag.value));
+        displayView(viewTagSeq3);
     }
     catch (const std::exception& ex) {
         std::cout << "Exception : " << ex.what() << std::endl;

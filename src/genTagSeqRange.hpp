@@ -21,11 +21,15 @@ struct StringLiteral {
         std::copy_n(str, N, value);
     }
 
+    size_t length() const { return N-1; }
+
     char value[N];
 };
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
 struct TagSeqIter {
+
+    using value_type = std::string;
     using difference_type = std::ptrdiff_t;
 
     const std::string& operator*() const { return m_curTag; }
