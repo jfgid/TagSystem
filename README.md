@@ -159,7 +159,7 @@ private:
 };
 ```
 The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function.  
-A template non-type (sic) parameter can not be of type *std::string* because "because it is not structural" (as said by the compiler), so the type "StringLiteral" is used to set the initial value of the tag as explained on the blog page entitled *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
+A template non-type (sic) parameter can not be of type *std::string* "because it is not structural" (as said by the compiler), so a type "StringLiteral" is defined to be used to set the initial value of the tag as explained on the blog page entitled *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
 ```
 template<size_t N>
 struct StringLiteral {
@@ -170,7 +170,7 @@ struct StringLiteral {
     char value[N];
 };
 ```
-Finally these ranges can be used as simple as :
+Finally these ranges can be used as simply as :
 ```
 constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
 auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
