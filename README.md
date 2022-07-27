@@ -122,7 +122,7 @@ string genNextTag(const string& curTag, const string&)
 The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that it is possible after the computation to iterate through this vector to process the generated words.
 
 ### By using infinite ranges
-Tag systems are implemented in the file "genTagSequence.cpp" by using infinite (or endless) ranges as explained in the first part of this video entitled *Conquering C++20 Ranges*[^2] for computing the Fibonnaci sequence. This implementation uses the subrange class template which combines an iterator and a sentinel in a single view :
+Tag systems are implemented in the file "genTagSeqRange.hpp" by using infinite (or endless) ranges as explained in the first part of this video entitled *Conquering C++20 Ranges*[^2] for computing the Fibonnaci sequence. This implementation uses the subrange class template which combines an iterator and a sentinel in a single view :
 ```
 namespace views {
     template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
@@ -135,6 +135,8 @@ The specific iterator *TagSeqIter* is defined as :
 ```
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
 struct TagSeqIter {
+
+    using value_type = std::string;
     using difference_type = std::ptrdiff_t;
 
     const std::string& operator*() const { return m_curTag; }
@@ -167,6 +169,8 @@ struct StringLiteral {
         std::copy_n(str, N, value);
     }
 
+    size_t length() const { return N-1; }
+
     char value[N];
 };
 ```
@@ -175,8 +179,7 @@ Finally these ranges can be used as simply as :
 constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
 auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
 
-std::cout << "> 0: " << firstTag.value << std::endl;
-for (int idx; const auto& tag : viewTagSeq3) {
+for (int idx = 0; const auto& tag : viewTagSeq3) {
     if (tag.length() == 0) {
         break;
     }
