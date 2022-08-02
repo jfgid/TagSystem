@@ -226,5 +226,25 @@ int main()
 ```
 Doing so, the data generation and the various data processing operations are separated which is not the case with a handwritten loop. But what is the price to pay for this ?
 
+## Comparison of performances between a handwritten loop and a range
+The sub-directory "test" contains two programs implementing the 3-tag system defined by E. Post in 1963 (see the french wikipedia page referenced above), one named "genPostTagLoop" by a handwritten loop and the other named "genPostTagRange" with a range.  
+The tests done to compare the computation time taken by these programs show for instance :
+```
+$ time ./test/genPostTagLoop 100000000
+> 99999999: abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab
+
+real	0m9.091s
+user	0m9.091s
+sys	0m0.000s
+
+$ time ./test/genPostTagRange 100000000
+> 99999999: abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab
+
+real	1m17.863s
+user	1m17.843s
+sys	0m0.016s
+```
+Other tests confirm that the implementation with a handwritten loop is about 8 times faster than the implemtation using a range. 
+
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
