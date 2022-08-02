@@ -161,7 +161,7 @@ private:
 };
 ```
 The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function.  
-A template non-type (sic) parameter can not be of type *std::string* "because it is not structural" (as said by the compiler), so a type "StringLiteral" is defined to be used to set the initial value of the tag as explained on the blog page entitled *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
+A template non-type (sic) parameter can not be of type *std::string* "because it is not structural" (as said by the compiler), so a type "StringLiteral" is defined to be used to set the initial value of the tag as explained on the blog page *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
 ```
 template<size_t N>
 struct StringLiteral {
@@ -176,17 +176,17 @@ struct StringLiteral {
 ```
 Finally these ranges can be used as simply as :
 ```
-constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
-auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
+constexpr StringLiteral firstTag{ "aaa" };
+auto viewTagSeq = views::tagSeq<prod_rule2, 2, 2, firstTag>;
 
-for (int idx = 0; const auto& tag : viewTagSeq3) {
+for (int idx = 0; const auto& tag : viewTagSeq) {
     if (tag.length() == 0) {
         break;
     }
     std::cout << "> " << idx++ << ": " << tag << std::endl;
 }
 ```
-Actually the elements composing the range are generated only when iterating on it.
+Actually the elements composing the range are generated only when iterating on it and the computation is stopped when the length of the generated word is equal to 0 (assuming that there is a length method on the objects into the range).
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
