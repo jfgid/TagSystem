@@ -8,15 +8,19 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    const int ntag = (argc <=1 ) ? 10 : atoi(argv[1]);
+    const int nbTag = (argc <=1 ) ? 10 : atoi(argv[1]);
 
     try {
         constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
-        auto viewTagSeq = myviews::tagSeq<prod_rule3, 3, 1, firstTag>
-            | views::take(ntag);
+        auto viewTagSeq = myviews::tagSeq<prod_rule3, 3, 1, firstTag>;
 
+        const auto idxMax = nbTag - 1;
         for (int idx = 0; const auto & tag : viewTagSeq) {
-            cout << "> " << idx++ << ": " << tag << endl;
+            if (idx == idxMax) {
+                cout << "> " << idx++ << ": " << tag << endl;
+                break;
+            }
+            idx++;
         }
     }
     catch (const std::exception& ex) {
