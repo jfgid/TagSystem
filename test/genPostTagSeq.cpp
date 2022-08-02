@@ -4,19 +4,23 @@
 #include "genTagSeqRange.hpp"
 #include "prodRules.hpp"
 
-int main()
+using namespace std;
+
+int main(int argc, char* argv[])
 {
+    const int ntag = (argc <=1 ) ? 10 : atoi(argv[1]);
+
     try {
         constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
         auto viewTagSeq = myviews::tagSeq<prod_rule3, 3, 1, firstTag>
-            | std::views::transform([](auto tag) { return tag.length(); });
+            | views::take(ntag);
 
         for (int idx = 0; const auto & tag : viewTagSeq) {
-            std::cout << "> " << idx++ << ": " << tag << std::endl;
+            cout << "> " << idx++ << ": " << tag << endl;
         }
     }
     catch (const std::exception& ex) {
-        std::cout << "Exception : " << ex.what() << std::endl;
+        cout << "Exception : " << ex.what() << endl;
     }
 
     return 0;
