@@ -124,7 +124,7 @@ The second argument of the *genNextTag* function is useless, so it is unnamed. T
 ### By using infinite ranges
 Tag systems are implemented in the file "genTagSeqRange.hpp" by using infinite (or endless) ranges as explained in the first part of this video entitled *Conquering C++20 Ranges*[^2] for computing the Fibonnaci sequence. This implementation uses the subrange class template which combines an iterator and a sentinel in a single view :
 ```
-namespace views {
+namespace myviews {
     template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
     auto tagSeq =
         std::ranges::subrange<TagSeqIter<ProdRule, DelNum, MinLen, IniTag>, std::unreachable_sentinel_t>{};
@@ -177,7 +177,7 @@ struct StringLiteral {
 Finally these ranges can be used as simply as :
 ```
 constexpr StringLiteral firstTag{ "aaa" };
-auto viewTagSeq = views::tagSeq<prod_rule2, 2, 2, firstTag>;
+auto viewTagSeq = myviews::tagSeq<prod_rule2, 2, 2, firstTag>;
 
 for (int idx = 0; const auto& tag : viewTagSeq) {
     if (tag.length() == 0) {
