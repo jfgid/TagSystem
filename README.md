@@ -186,7 +186,42 @@ for (int idx = 0; const auto& tag : viewTagSeq) {
     std::cout << "> " << idx++ << ": " << tag << std::endl;
 }
 ```
-Actually the elements composing the range are generated only when iterating on it and the computation is stopped when the length of the generated word is equal to 0 (assuming that there is a length method on the objects into the range).
+Actually the elements composing the range are generated only when iterating on it and the computation is stopped when the length of the generated word is equal to 0 (assuming that there is a length method on the objects into the range).  
+The great benefit of ranges is that several transformations can be chained using the pipe syntax that overloads the | operator as in this example :
+```
+bool isOneLetterComposed(const string& word, char letter)
+{
+    for (char c : word) {
+        if (c != letter) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main()
+{
+    try {
+        // Compute the Collatz sequence starting at 27.
+        constexpr StringLiteral firstTag{ "aaaaaaaaaaaaaaaaaaaaaaaaaaa" };
+        auto viewTagSeq = myviews::tagSeq<prod_rule2, 2, 2, firstTag>
+            | views::filter([](const auto& tag) { return isOneLetterComposed(tag, 'a'); })
+            | views::transform([](auto tag) { return tag.length(); });
+
+        for (int idx = 0; const auto& tag : viewTagSeq) {
+            if (tag == 1) {
+                cout << "> " << idx++ << ": " << tag << endl;
+                break;
+            }
+            cout << "> " << idx++ << ": " << tag << endl;
+        }
+    }
+    catch (const std::exception& ex) {
+        cout << "Exception : " << ex.what() << endl;
+    }
+    return 0;
+}
+```
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
