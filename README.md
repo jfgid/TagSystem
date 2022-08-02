@@ -187,6 +187,8 @@ for (int idx = 0; const auto& tag : viewTagSeq) {
 }
 ```
 Actually the elements composing the range are generated only when iterating on it and the computation is stopped when the length of the generated word is equal to 0 (assuming that there is a length method on the objects into the range).  
+Todo : could be improved by using a specific sentinel in the range definition.
+
 The great benefit of ranges is that several transformations can be chained using the pipe syntax that overloads the | operator as in this example :
 ```
 bool isOneLetterComposed(const string& word, char letter)
@@ -222,6 +224,7 @@ int main()
     return 0;
 }
 ```
+Doing so, the data generation and the various data processing operations are separated which is not the case with a handwritten loop. But what is the price to pay for this ?
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
