@@ -26,3 +26,10 @@ add_executable(genPostTagSeq
     genPostTagSeq.cpp)
 
 set_property(TARGET genPostTagSeq PROPERTY CXX_STANDARD 20)
+
+# Generate a Collatz sequence
+add_executable(genCollatzSeq
+    prodRules.cpp
+    genCollatzSeq.cpp)
+
+set_property(TARGET genCollatzSeq PROPERTY CXX_STANDARD 20)

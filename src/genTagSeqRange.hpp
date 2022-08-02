@@ -28,7 +28,6 @@ struct StringLiteral {
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
 struct TagSeqIter {
-
     using value_type = std::string;
     using difference_type = std::ptrdiff_t;
 
