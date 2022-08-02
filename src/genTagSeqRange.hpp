@@ -52,7 +52,7 @@ private:
     std::string m_curTag = std::string(IniTag.value);
 };
 
-namespace views {
+namespace myviews {
     template<ProdRuleFunc ProdRule, int DelNum, int MinLen, StringLiteral IniTag>
     auto tagSeq =
         std::ranges::subrange<TagSeqIter<ProdRule, DelNum, MinLen, IniTag>, std::unreachable_sentinel_t>{};

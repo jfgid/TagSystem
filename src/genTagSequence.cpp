@@ -17,7 +17,7 @@ int main()
 {
     try {
         constexpr StringLiteral firstTag{ "baa" };
-        auto viewTagSeq1 = views::tagSeq<prod_rule1, 2, 1, firstTag>;
+        auto viewTagSeq1 = myviews::tagSeq<prod_rule1, 2, 1, firstTag>;
 
         displayView(viewTagSeq1);
     }
@@ -28,7 +28,7 @@ int main()
     std::cout << std::endl;
     try {
         constexpr StringLiteral firstTag{ "aaa" };
-        auto viewTagSeq2 = views::tagSeq<prod_rule2, 2, 2, firstTag>;
+        auto viewTagSeq2 = myviews::tagSeq<prod_rule2, 2, 2, firstTag>;
 
         displayView(viewTagSeq2);
     }
@@ -39,7 +39,7 @@ int main()
     std::cout << std::endl;
     try {
         constexpr StringLiteral firstTag{ "baabaabaabaabaabaabaa" };
-        auto viewTagSeq3 = views::tagSeq<prod_rule3, 3, 1, firstTag>;
+        auto viewTagSeq3 = myviews::tagSeq<prod_rule3, 3, 1, firstTag>;
 
         displayView(viewTagSeq3);
     }
