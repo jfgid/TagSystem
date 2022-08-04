@@ -160,7 +160,18 @@ private:
     std::string m_curTag = std::string(IniTag.value);
 };
 ```
-The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function.  
+The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function (ptimized to avoid unnecessary string constructions) :
+```
+template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
+void genNextTag(std::string& tag)
+{
+    if (tag.length() < MinLen) {
+        tag.clear();
+        return;
+    }
+    genTag<ProdRule>(DelNum, tag);
+}
+```
 A template non-type (sic) parameter can not be of type *std::string* "because it is not structural" (as said by the compiler), so a type "StringLiteral" is defined to be used to set the initial value of the tag as explained on the blog page *[Passing String Literals as Template Parameters in C++20](https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/)* :
 ```
 template<size_t N>
@@ -187,7 +198,7 @@ for (int idx = 0; const auto& tag : viewTagSeq) {
 }
 ```
 Actually the elements composing the range are generated only when iterating on it and the computation is stopped when the length of the generated word is equal to 0 (assuming that there is a length method on the objects into the range).  
-Todo : could be improved by using a specific sentinel in the range definition.
+Todo : see if it could be improved by using a specific sentinel in the range definition.
 
 The great benefit of ranges is that several transformations can be chained using the pipe syntax that overloads the | operator as in this example :
 ```
@@ -240,11 +251,12 @@ sys	0m0.000s
 $ time ./test/genPostTagRange 100000000
 > 99999999: abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab
 
-real	1m17.863s
-user	1m17.843s
-sys	0m0.016s
+real	0m48.329s
+user	0m48.323s
+sys	0m0.005s
 ```
-Other tests confirm that the implementation with a handwritten loop is about 8 times faster than the implemtation using a range. 
+Other tests confirm tht this implementation with a handwritten loop is about 5 times faster than the implementation using a range.  
+Todo: analyze the reasons for this difference and see if it can be reduced.
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
