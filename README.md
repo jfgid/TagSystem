@@ -160,7 +160,7 @@ private:
     std::string m_curTag = std::string(IniTag.value);
 };
 ```
-The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function (ptimized to avoid unnecessary string constructions) :
+The statement *using difference_type = std::ptrdiff_t;* is used to satisfy the concepts "weakly_incrementable" and "input_or_output_iterator" (to be clarified later). The generation of tags is done by the prefix increment operator using *genNextTag* function (optimized to avoid unnecessary string constructions) :
 ```
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
 void genNextTag(std::string& tag)
