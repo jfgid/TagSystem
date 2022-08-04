@@ -15,7 +15,7 @@ void genTagSeqBoundedLoop(const string& firstWord, int idxMax)
     }
     string word = firstWord;
     int idx = 0;
-    while (word.length() > 0) {
+    while (word.length() >= MinLen) {
         if (idx == idxMax) {
             cout << "> " << idx++ << ": " << word << endl;
             return;

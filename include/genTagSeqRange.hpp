@@ -5,14 +5,13 @@
 #include "genTag.hpp"
 
 template<ProdRuleFunc ProdRule, int DelNum, int MinLen>
-std::string genNextTag(const std::string& tag)
+void genNextTag(std::string& tag)
 {
     if (tag.length() < MinLen) {
-        return "";
+        tag.clear();
+        return;
     }
-    std::string nextTag = tag;
-    genTag<ProdRule>(DelNum, nextTag);
-    return nextTag;
+    genTag<ProdRule>(DelNum, tag);
 }
 
 template<size_t N>
@@ -35,7 +34,7 @@ struct TagSeqIter {
 
     // Define prefix increment operator.
     TagSeqIter& operator++() {
-        m_curTag = genNextTag<ProdRule, DelNum, MinLen>(m_curTag);
+        genNextTag<ProdRule, DelNum, MinLen>(m_curTag);
         return *this;
     }
 
