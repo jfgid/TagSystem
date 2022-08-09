@@ -17,9 +17,10 @@ void genTagSeqBoundedLoop(const string& firstWord, int idxMax)
     int idx = 0;
     while (word.length() >= MinLen) {
         if (idx == idxMax) {
-            cout << "> " << idx++ << ": " << word << endl;
+            cout << idx << ":" << word << ":" << word.length() << endl;
             return;
         }
+        cout << idx << ":" << word << ":" << word.length() << endl;
         genTag<ProdRule>(DelNum, word);
         idx++;
     }
