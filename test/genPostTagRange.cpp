@@ -15,6 +15,9 @@ int main(int argc, char* argv[])
         auto viewTagSeq = myviews::tagSeq<prod_rule3, 3, 1, firstTag>;
 
         const auto idxMax = nbTag - 1;
+        if (idxMax < 0) {
+            return 1;
+        }
         for (int idx = 0; const auto & tag : viewTagSeq) {
             if (idx == idxMax) {
                 cout << "> " << idx++ << ": " << tag << endl;
