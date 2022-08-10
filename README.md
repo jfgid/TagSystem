@@ -255,8 +255,92 @@ real	0m48.329s
 user	0m48.323s
 sys	0m0.005s
 ```
-Other tests confirm tht this implementation with a handwritten loop is about 5 times faster than the implementation using a range.  
+Other tests confirm that this implementation with a handwritten loop is about 5 times faster than the implementation using a range.  
 Todo: analyze the reasons for this difference and see if it can be reduced.
+
+## A little digression
+The sequence computed in the previous chapter for testing the performances seems to stabilize on an infinite cycle :
+```
+$ ./test/genPostTagLoop 2200
+0:baabaabaabaabaabaabaa:21
+1:baabaabaabaabaabaabbab:22
+2:baabaabaabaabaabbabbbab:23
+3:baabaabaabaabbabbbabbbab:24
+...
+2183:abaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbab:86
+2184:aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2185:aabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaa:84
+2186:babbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaa:83
+2187:bbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbab:84
+2188:bbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbab:85
+2189:abaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbab:86
+2190:aaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2191:bbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaa:84
+2192:bbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbab:85
+2193:abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbab:86
+2194:aaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaa:85
+2195:aabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaa:84
+2196:babbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaa:83
+2197:bbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbab:84
+2198:bbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbab:85
+2199:abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab:86
+```
+Can we easily detect a cycle in this sequence by using the Unix utilities ? The answer is yes as shown below.  
+We extract in a file the words that appear several times in the generated sequence by the commands :
+```
+$ ./test/genPostTagLoop 2200 > postag-2200.txt
+
+$ cut -d: -f2,3 postag-2200.txt | sort > postag-2200-sorted.txt
+
+$ uniq postag-2200-sorted.txt > postag-2200-sorted-uniq.txt
+
+$ diff postag-2200-sorted.txt postag-2200-sorted-uniq.txt | sed 's/^< //'  | uniq > postag-2200-duplicates-uniq.txt
+```
+The file "postag-2200-duplicates-uniq.txt" contains a list of words (with their lengths) found more than once in the sequence.
+We can get the position of the first appearance of one of these duplicated values and this value by :
+```
+$ for t in `cat postag-2200-duplicates-uniq.txt`; do grep $t postag-2200.txt ; done | awk -F: 'BEGIN {min=2200} {if ($1 < min) min=$1} END {print min}'
+2128
+
+$ grep '^2128' postag-2200.txt
+2128:aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+
+$ grep aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85 postag-2200.txt
+2128:aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2156:aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2184:aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+```
+So the cycle found has a length of 28 and is as follows :
+```
+2128:aaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2129:aabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaa:84
+2130:babbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaa:83
+2131:bbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbab:84
+2132:bbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbab:85
+2133:abaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbab:86
+2134:aaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2135:bbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaa:84
+2136:bbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbab:85
+2137:abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbab:86
+2138:aaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaa:85
+2139:aabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaa:84
+2140:babbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaa:83
+2141:bbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbab:84
+2142:bbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbab:85
+2143:abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab:86
+2144:aaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaa:85
+2145:aabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaa:84
+2146:babbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaa:83
+2147:bbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbab:84
+2148:bbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbab:85
+2149:abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbab:86
+2150:aaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaa:85
+2151:aabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaa:84
+2152:babbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaa:83
+2153:bbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbab:84
+2154:bbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbab:85
+2155:abaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbab:86
+```
 
 [^1]: Yvan Cukic. *Functional Programming in C++*. Manning Publications Co., 2019.
 [^2]: [Conquering C++20 Ranges - Tristan Brindle - CppCon 2021](https://www.youtube.com/watch?v=3MBtLeyJKg0)
