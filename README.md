@@ -286,7 +286,7 @@ $ ./test/genPostTagLoop 2200
 2199:abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab:86
 ```
 Can we easily detect a cycle in this sequence by using the Unix utilities ? The answer is yes as shown below.  
-We extract in a file the words that appear several times in the generated sequence by the commands :
+We can extract in a file the words if they exist that appear several times in the generated sequence by the commands :
 ```
 $ ./test/genPostTagLoop 2200 > postag-2200.txt
 
@@ -294,7 +294,7 @@ $ cut -d: -f2,3 postag-2200.txt | sort > postag-2200-sorted.txt
 
 $ uniq postag-2200-sorted.txt > postag-2200-sorted-uniq.txt
 
-$ diff postag-2200-sorted.txt postag-2200-sorted-uniq.txt | sed 's/^< //'  | uniq > postag-2200-duplicates-uniq.txt
+$ diff postag-2200-sorted.txt postag-2200-sorted-uniq.txt | grep '^< ' | sed 's/^< //'  | uniq > postag-2200-duplicates-uniq.txt
 ```
 The file "postag-2200-duplicates-uniq.txt" contains a list of words (with their lengths) found more than once in the sequence.
 We can get the position of the first appearance of one of these duplicated values and this value by :
