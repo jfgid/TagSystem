@@ -243,7 +243,7 @@ The executable for this implementation is : **genTagSequence**.
 Doing so, the data generation and the various data processing operations are separated which is not the case with a handwritten loop. But what is the price to pay for this ?
 
 ## Comparison of performances between a handwritten loop and a range
-The sub-directory "test" contains two programs implementing the 3-tag system defined by E. Post in 1963 (see the french wikipedia page referenced above), one named "genPostTagLoop" by a handwritten loop and the other named "genPostTagRange" with a range.  
+The sub-directory "test" contains two programs implementing the 3-tag system defined by E. Post in 1963 (see the french wikipedia page referenced above), one named **"genPostTagLoop"** by a handwritten loop and the other named **"genPostTagRange"** with a range.  
 The tests done to compare the computation time taken by these programs show for instance :
 ```
 $ time ./bin/genPostTagLoop 100000000
