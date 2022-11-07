@@ -8,8 +8,9 @@ Tag systems are described in Wikipedia :
 * [Système de tague](https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_tague)
 
 ## How to build the project
-This project has been done on Ubuntu 22.04 with the C++ compiler GCC v11.2 compatible with the C++20 version of the C++ language. It uses the CMake utility (v3.22.1). To build the binaries from the source code after cloning the Git repository, you can create a empty sub-directory "build" and run these commands :
+This project has been done on Ubuntu 22.04 with the C++ compiler GCC v11.2 compatible with the C++20 version of the C++ language. It uses the CMake utility (v3.22.1). After cloning the Git repository, you can build the binaries from the source code by running in the directory where the source code is stored these commands :
 ```
+$ mkdir build
 $ cd build
 $ cmake ..
 -- The C compiler identification is GNU 11.2.0
@@ -24,7 +25,7 @@ $ make
 [ 25%] Linking CXX executable genTagSequence
 ...
 ```
-The executables are generated into the sub-directory : build/src/
+The executables are generated into the sub-directory : build/bin
 
 ## Word (tag) generation
 The generation of the next tag from the current one is done by the *genTag* function :
