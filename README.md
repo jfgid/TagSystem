@@ -25,7 +25,7 @@ $ make
 [ 25%] Linking CXX executable genTagSequence
 ...
 ```
-The executables are generated into the sub-directory : build/bin
+The executables are generated into the sub-directory : build/bin.
 
 ## Word (tag) generation
 The generation of the next tag from the current one is done by the *genTag* function :
@@ -70,8 +70,8 @@ void genTagSeqLoop(const string& firstWord)
     }
 }
 ```
-The consecutive words are not stored in memory but written onto standard output stream.
-The executable for this implementation is "genTagSeqLoop".
+The consecutive words are not stored in memory but written onto standard output stream.  
+The executable for this implementation is : **genTagSeqLoop**.
 
 ## Recursive implementation
 The tag sequences generation is implemented in the file "genTagSeqRec.cpp" by using recursion :
@@ -88,8 +88,8 @@ void genTagSequences(const string& word, int idx)
     genTagSequences<ProdRule, DelNum, MinLen>(next_word, idx);
 }
 ```
-There is a drawback with this implementation because, although this code seems tail-recursive, the used compiler (g++-11 v11.2.0) doesn't employ tail-call optimization (even with the -O2 option) and the computation of the last tag sequences (the 3-tag system defined by E. Post with the initial word "baabaabaabaabaabaabaa") fails with a segmentation fault.
-The executable for this implementation is "genTagSeqRec".
+There is a drawback with this implementation because, although this code seems tail-recursive, the used compiler (g++-11 v11.2.0) doesn't employ tail-call optimization (even with the -O2 option) and the computation of the last tag sequences (the 3-tag system defined by E. Post with the initial word "baabaabaabaabaabaabaa") fails with a segmentation fault.  
+The executable for this implementation is : **genTagSeqRec**.
 
 ## Functional implementation
 
@@ -122,8 +122,8 @@ string genNextTag(const string& curTag, const string&)
         cout << "last: " << res << endl;
 ...
 ```
-The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that it is possible after the computation to iterate through this vector to process the generated words.
-The executable for this implementation is "genTagSeqAccu".
+The second argument of the *genNextTag* function is useless, so it is unnamed. The drawback of this implementation, besides its inefficiency, is that a vector with an appropriate size must be created before running the accumulate algorithm. The small benefit is that it is possible after the computation to iterate through this vector to process the generated words.  
+The executable for this implementation is : **genTagSeqAccu**.
 
 ### By using infinite ranges
 Tag systems are implemented in the file "genTagSeqRange.hpp" by using infinite (or endless) ranges as explained in the first part of this video entitled *Conquering C++20 Ranges*[^2] for computing the Fibonnaci sequence. This implementation uses the subrange class template which combines an iterator and a sentinel in a single view :
@@ -239,7 +239,7 @@ int main()
     return 0;
 }
 ```
-The executable for this implementation is "genTagSequence".
+The executable for this implementation is : **genTagSequence**.  
 Doing so, the data generation and the various data processing operations are separated which is not the case with a handwritten loop. But what is the price to pay for this ?
 
 ## Comparison of performances between a handwritten loop and a range
