@@ -246,14 +246,14 @@ Doing so, the data generation and the various data processing operations are sep
 The sub-directory "test" contains two programs implementing the 3-tag system defined by E. Post in 1963 (see the french wikipedia page referenced above), one named **"genPostTagLoop"** by a handwritten loop and the other named **"genPostTagRange"** with a range.  
 The tests done to compare the computation time taken by these programs show for instance :
 ```
-$ time ./bin/genPostTagLoop 100000000
+$ time ./genPostTagLoop 100000000
 > 99999999: abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab
 
 real	0m9.091s
 user	0m9.091s
 sys	0m0.000s
 
-$ time ./bin/genPostTagRange 100000000
+$ time ./genPostTagRange 100000000
 > 99999999: abaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaaaabbabbbabbbabaaaabbabbbabaaaaaabbabbbabbbab
 
 real	0m48.329s
@@ -266,7 +266,7 @@ Todo: analyze the reasons for this difference and see if it can be reduced.
 ## A little digression
 The sequence computed in the previous chapter for testing the performances seems to stabilize on an infinite cycle :
 ```
-$ ./test/genPostTagLoop 2200
+$ ./genPostTagLoop 2200
 0:baabaabaabaabaabaabaa:21
 1:baabaabaabaabaabaabbab:22
 2:baabaabaabaabaabbabbbab:23
@@ -293,7 +293,7 @@ $ ./test/genPostTagLoop 2200
 Can we easily detect a cycle in this sequence by using the Unix utilities ? The answer is yes as shown below.  
 We can extract in a file the words if they exist that appear several times in the generated sequence by the commands :
 ```
-$ ./bin/genPostTagLoop 2200 > postag-2200.txt
+$ ./genPostTagLoop 2200 > postag-2200.txt
 
 $ cut -d: -f2,3 postag-2200.txt | sort > postag-2200-sorted.txt
 
